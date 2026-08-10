@@ -343,7 +343,7 @@ let licenseKey = localStorage.getItem("licenseKey"); // بنقرأ الكود م
 
 // الدالة دي بتولد مسار الداتابيز المخصوص للمدرس بناءً على كوده!
 function getFirebaseUrl() {
-    return `https://El3alamy-system-default-rtdb.europe-west1.firebasedatabase.app/${licenseKey}/data.json`;
+    return `https://el-senior-system-default-rtdb.europe-west1.firebasedatabase.app/${licenseKey}/data.json`;
 }
 
 // ==========================================
@@ -381,7 +381,7 @@ if(loginForm) {
 
         try {
             // 👑 فحص المدير
-            let settingsRes = await fetch(`https://El3alamy-system-default-rtdb.europe-west1.firebasedatabase.app/${code}/data/settings.json`);
+            let settingsRes = await fetch(`https://el-senior-system-default-rtdb.europe-west1.firebasedatabase.app/${code}/data/settings.json`);
             let settings = await settingsRes.json();
             
             // 🔒 التعديل هنا: لو الداتابيز فاضية، هيدخلك باليوزر الافتراضي (admin) والباسورد (12345)
@@ -397,7 +397,7 @@ if(loginForm) {
             }
             
             // 👥 فحص المساعد
-            let asstRes = await fetch(`https://El3alamy-system-default-rtdb.europe-west1.firebasedatabase.app/${code}/assistants/${user}.json`);
+            let asstRes = await fetch(`https://el-senior-system-default-rtdb.europe-west1.firebasedatabase.app/${code}/assistants/${user}.json`);
             let asstData = await asstRes.json();
             
             if (asstData && asstData.password === pass) {
@@ -438,7 +438,7 @@ window.createAssistant = async function() {
     let orig = btn.innerText; btn.innerText = "جاري... ⏳";
 
     try {
-        await fetch(`https://El3alamy-system-default-rtdb.europe-west1.firebasedatabase.app/${uid}/assistants/${user}.json`, {
+        await fetch(`https://el-senior-system-default-rtdb.europe-west1.firebasedatabase.app/${uid}/assistants/${user}.json`, {
             method: 'PUT', headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ password: pass, permissions: selectedPerms, createdAt: new Date().toISOString() })
         });
@@ -464,7 +464,7 @@ window.renderAssistants = async function() {
 
     tbody.innerHTML = `<tr><td colspan="3" style="text-align: center;">جاري التحميل...</td></tr>`;
     try {
-        let res = await fetch(`https://El3alamy-system-default-rtdb.europe-west1.firebasedatabase.app/${window.getSafeUid()}/assistants.json`);
+        let res = await fetch(`https://el-senior-system-default-rtdb.europe-west1.firebasedatabase.app/${window.getSafeUid()}/assistants.json`);
         let data = await res.json() || {};
         
         tbody.innerHTML = "";
@@ -495,7 +495,7 @@ window.openEditPermissionsModal = async function(user) {
     
     try {
         // جلب صلاحيات المساعد الحالية من السيرفر
-        let res = await fetch(`https://El3alamy-system-default-rtdb.europe-west1.firebasedatabase.app/${window.getSafeUid()}/assistants/${user}.json`);
+        let res = await fetch(`https://el-senior-system-default-rtdb.europe-west1.firebasedatabase.app/${window.getSafeUid()}/assistants/${user}.json`);
         let data = await res.json();
         let perms = data.permissions || ['dashboard','schedule','students','groups','attendance','homework','exams','leaderboard']; 
 
@@ -520,7 +520,7 @@ window.saveEditedPermissions = async function() {
     
     try {
         // تحديث الصلاحيات فقط في الفايربيز (بدون مسح الباسورد)
-        await fetch(`https://El3alamy-system-default-rtdb.europe-west1.firebasedatabase.app/${window.getSafeUid()}/assistants/${user}.json`, {
+        await fetch(`https://el-senior-system-default-rtdb.europe-west1.firebasedatabase.app/${window.getSafeUid()}/assistants/${user}.json`, {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ permissions: selectedPerms })
@@ -538,7 +538,7 @@ window.saveEditedPermissions = async function() {
 window.deleteAssistant = async function(user) {
     if(!confirm(`هل تريد حذف المساعد: ${user} نهائياً؟`)) return;
     try {
-        await fetch(`https://El3alamy-system-default-rtdb.europe-west1.firebasedatabase.app/${window.getSafeUid()}/assistants/${user}.json`, { method: 'DELETE' });
+        await fetch(`https://el-senior-system-default-rtdb.europe-west1.firebasedatabase.app/${window.getSafeUid()}/assistants/${user}.json`, { method: 'DELETE' });
         renderAssistants();
     } catch(e) {}
 };
@@ -737,10 +737,10 @@ async function loadDataFromFirebase() {
 
         // 💻 سحب بيانات المنصة (الكورسات والمشاهدات) لربطها بالحضور
         try {
-            let lecRes = await fetch(`https://El3alamy-system-default-rtdb.europe-west1.firebasedatabase.app/${localStorage.getItem("licenseKey")}/lectures.json`);
+            let lecRes = await fetch(`https://el-senior-system-default-rtdb.europe-west1.firebasedatabase.app/${localStorage.getItem("licenseKey")}/lectures.json`);
             window.platformLectures = Object.values(await lecRes.json() || {});
             
-            let trackRes = await fetch(`https://El3alamy-system-default-rtdb.europe-west1.firebasedatabase.app/${localStorage.getItem("licenseKey")}/course_tracking.json`);
+            let trackRes = await fetch(`https://el-senior-system-default-rtdb.europe-west1.firebasedatabase.app/${localStorage.getItem("licenseKey")}/course_tracking.json`);
             window.platformTracking = await trackRes.json() || {};
         } catch(e) { console.log("لم يتم جلب بيانات المنصة للربط"); }
         let data = await res.json();
@@ -2821,7 +2821,7 @@ document.getElementById('demoRegistrationForm')?.addEventListener('submit', func
     localStorage.setItem("demo_device_id", demoId); // حفظ البصمة
 
     // رفع بيانات العميل للوحة الإدارة (الفايربيز) بالحالة نشط
-    fetch(`https://El3alamy-system-default-rtdb.europe-west1.firebasedatabase.app/demo_users/${demoId}.json`, {
+    fetch(`https://el-senior-system-default-rtdb.europe-west1.firebasedatabase.app/demo_users/${demoId}.json`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
@@ -2856,7 +2856,7 @@ document.getElementById('requestIdCardsForm')?.addEventListener('submit', functi
     }
 
     // رفع الطلب لقاعدة بيانات الإدارة العليا (dashb.html)
-    fetch(`https://El3alamy-system-default-rtdb.europe-west1.firebasedatabase.app/id_orders/${Date.now()}.json`, {
+    fetch(`https://el-senior-system-default-rtdb.europe-west1.firebasedatabase.app/id_orders/${Date.now()}.json`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
@@ -2880,7 +2880,7 @@ document.getElementById('requestIdCardsForm')?.addEventListener('submit', functi
 // 💸 نظام الإحالات المتكامل (Stats & Checkout)
 // ==========================================
 
-const DB_URL = "https://El3alamy-system-default-rtdb.europe-west1.firebasedatabase.app";
+const DB_URL = "https://el-senior-system-default-rtdb.europe-west1.firebasedatabase.app";
 window.availableAffiliateBalance = 0; // متغير جلوبال لتخزين الرصيد المتاح للسحب
 
 // 1. توليد كود إحالة عشوائي وفريد ومستحيل يتكرر
@@ -3593,7 +3593,7 @@ window.generateChargeCodes = async function() {
     }
 
     try {
-        await fetch(`https://El3alamy-system-default-rtdb.europe-west1.firebasedatabase.app/${uid}/chargeCodes.json`, {
+        await fetch(`https://el-senior-system-default-rtdb.europe-west1.firebasedatabase.app/${uid}/chargeCodes.json`, {
             method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(newCodes)
         });
         
@@ -3642,7 +3642,7 @@ window.downloadNewCodesExcel = function() {
 // 📥 تحميل جميع أكواد السنتر في ملف إكسيل
 window.exportAllCodesToExcel = async function() {
     try {
-        let res = await fetch(`https://El3alamy-system-default-rtdb.europe-west1.firebasedatabase.app/${getSafeUid()}/chargeCodes.json`);
+        let res = await fetch(`https://el-senior-system-default-rtdb.europe-west1.firebasedatabase.app/${getSafeUid()}/chargeCodes.json`);
         let codes = await res.json() || {};
         let data = Object.keys(codes).map(codeStr => ({
             "كود الشحن": codeStr,
@@ -3683,7 +3683,7 @@ window.renderChargeCodes = async function() {
         </tbody>`;
         
     try {
-        let res = await fetch(`https://El3alamy-system-default-rtdb.europe-west1.firebasedatabase.app/${getSafeUid()}/chargeCodes.json`);
+        let res = await fetch(`https://el-senior-system-default-rtdb.europe-west1.firebasedatabase.app/${getSafeUid()}/chargeCodes.json`);
         let codes = await res.json() || {};
         let tbody = document.getElementById("codes-tbody");
         tbody.innerHTML = "";
@@ -3726,7 +3726,7 @@ window.renderChargeCodes = async function() {
 window.deleteChargeCode = async function(codeStr) {
     if(!confirm("⚠️ هل أنت متأكد من حذف هذا الكود نهائياً؟")) return;
     try {
-        await fetch(`https://El3alamy-system-default-rtdb.europe-west1.firebasedatabase.app/${getSafeUid()}/chargeCodes/${codeStr}.json`, { method: 'DELETE' });
+        await fetch(`https://el-senior-system-default-rtdb.europe-west1.firebasedatabase.app/${getSafeUid()}/chargeCodes/${codeStr}.json`, { method: 'DELETE' });
         renderChargeCodes();
         showToast("تم حذف الكود بنجاح 🗑️");
     } catch(e) { alert("حدث خطأ"); }
@@ -3871,7 +3871,7 @@ window.loadSentNotifications = async function() {
     container.innerHTML = `<div style="text-align:center; padding:20px; color:var(--text-muted);">جاري جلب الإشعارات من السيرفر... ⏳</div>`;
 
     try {
-        let res = await fetch(`https://El3alamy-system-default-rtdb.europe-west1.firebasedatabase.app/${getSafeUid()}/notifications.json`);
+        let res = await fetch(`https://el-senior-system-default-rtdb.europe-west1.firebasedatabase.app/${getSafeUid()}/notifications.json`);
         let data = await res.json() || {};
         let notifs = Object.values(data).reverse(); 
         
@@ -4038,7 +4038,7 @@ window.saveLecture = async function() {
             image: imageBase64 || defaultImage, date: new Date().toISOString().split('T')[0] 
         };
 
-        await fetch(`https://El3alamy-system-default-rtdb.europe-west1.firebasedatabase.app/${window.getSafeUid()}/lectures/${newLecture.id}.json`, { 
+        await fetch(`https://el-senior-system-default-rtdb.europe-west1.firebasedatabase.app/${window.getSafeUid()}/lectures/${newLecture.id}.json`, { 
             method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(newLecture) 
         });
         
@@ -4084,7 +4084,7 @@ window.saveEditedCourse = async function() {
             linkedSessions: null, linkedSession: null // مسح النظام القديم
         };
 
-        await fetch(`https://El3alamy-system-default-rtdb.europe-west1.firebasedatabase.app/${window.getSafeUid()}/lectures/${id}.json`, { 
+        await fetch(`https://el-senior-system-default-rtdb.europe-west1.firebasedatabase.app/${window.getSafeUid()}/lectures/${id}.json`, { 
             method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(updatedLecture) 
         });
         showToast("تم حفظ التعديلات! 💾"); closeModal("editCourseModal"); renderLectures();
@@ -4232,7 +4232,7 @@ window.renderLectures = async function() {
     let list = document.getElementById("lectures-list"); if(!list) return;
     list.innerHTML = `<div style="grid-column: 1/-1; text-align:center;">جاري التحميل...</div>`;
     try {
-        let res = await fetch(`https://El3alamy-system-default-rtdb.europe-west1.firebasedatabase.app/${window.getSafeUid()}/lectures.json`);
+        let res = await fetch(`https://el-senior-system-default-rtdb.europe-west1.firebasedatabase.app/${window.getSafeUid()}/lectures.json`);
         let lectures = await res.json() || {};
         list.innerHTML = ""; let keys = Object.keys(lectures).reverse();
         if(keys.length === 0) return list.innerHTML = `<div style="grid-column: 1/-1; text-align:center; color:var(--text-muted);">لا توجد كورسات منشورة.</div>`;
@@ -4373,7 +4373,7 @@ window.openVideoAnalytics = async function(courseId, videoIndex, videoTitle) {
     let defaultMaxViews = course ? (parseInt(course.maxViews) || 0) : 0;
 
     try {
-        let res = await fetch(`https://El3alamy-system-default-rtdb.europe-west1.firebasedatabase.app/${window.getSafeUid()}/course_tracking/${courseId}.json`);
+        let res = await fetch(`https://el-senior-system-default-rtdb.europe-west1.firebasedatabase.app/${window.getSafeUid()}/course_tracking/${courseId}.json`);
         let trackingData = await res.json() || {};
         
         tbody.innerHTML = ""; let hasData = false;
@@ -4433,7 +4433,7 @@ window.addExtraViews = async function(courseId, videoIndex, studentKey, currentE
     btn.disabled = true;
 
     try {
-        await fetch(`https://El3alamy-system-default-rtdb.europe-west1.firebasedatabase.app/${window.getSafeUid()}/course_tracking/${courseId}/${studentKey}/${videoIndex}.json`, {
+        await fetch(`https://el-senior-system-default-rtdb.europe-west1.firebasedatabase.app/${window.getSafeUid()}/course_tracking/${courseId}/${studentKey}/${videoIndex}.json`, {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ extraViews: newExtraTotal })
@@ -4457,7 +4457,7 @@ window.openCourseAnalytics = async function(courseId) {
     openModal("courseAnalyticsModal");
 
     try {
-        let res = await fetch(`https://El3alamy-system-default-rtdb.europe-west1.firebasedatabase.app/${window.getSafeUid()}/course_tracking/${courseId}.json`);
+        let res = await fetch(`https://el-senior-system-default-rtdb.europe-west1.firebasedatabase.app/${window.getSafeUid()}/course_tracking/${courseId}.json`);
         let trackingData = await res.json() || {};
         
         tbody.innerHTML = ""; let hasData = false;
@@ -4493,7 +4493,7 @@ window.openCourseAnalytics = async function(courseId) {
 window.deleteLecture = async function(id) {
     if(!confirm("هل تريد حذف المحاضرة نهائياً؟")) return;
     try {
-        await fetch(`https://El3alamy-system-default-rtdb.europe-west1.firebasedatabase.app/${getSafeUid()}/lectures/${id}.json`, { method: 'DELETE' });
+        await fetch(`https://el-senior-system-default-rtdb.europe-west1.firebasedatabase.app/${getSafeUid()}/lectures/${id}.json`, { method: 'DELETE' });
         renderLectures();
     } catch(e) {}
 };
@@ -4562,12 +4562,12 @@ window.saveOnlineExam = async function() {
     let newExam = { id: "exam_" + Date.now(), title: title, duration: parseInt(duration), group: selectedGroups, autoShowResult: autoResult, totalScore: totalScore, status: "open", date: new Date().toISOString().split('T')[0], questions: currentQuestions };
 
     try {
-        let res = await fetch(`https://El3alamy-system-default-rtdb.europe-west1.firebasedatabase.app/${getSafeUid()}/data/onlineExams.json`);
+        let res = await fetch(`https://el-senior-system-default-rtdb.europe-west1.firebasedatabase.app/${getSafeUid()}/data/onlineExams.json`);
         let existingExams = await res.json() || [];
         if(!Array.isArray(existingExams)) existingExams = Object.values(existingExams).filter(e => e !== null);
         existingExams.push(newExam);
 
-        await fetch(`https://El3alamy-system-default-rtdb.europe-west1.firebasedatabase.app/${getSafeUid()}/data/onlineExams.json`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(existingExams) });
+        await fetch(`https://el-senior-system-default-rtdb.europe-west1.firebasedatabase.app/${getSafeUid()}/data/onlineExams.json`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(existingExams) });
 
         if(typeof showToast === 'function') showToast("تم نشر الامتحان للطلاب بنجاح! 🚀");
         else alert("تم نشر الامتحان بنجاح!");
@@ -4581,7 +4581,7 @@ window.renderOnlineExams = async function() {
     if(!container) return;
     container.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding:20px; color:var(--text-muted);">جاري التحميل... ⏳</div>`;
     try {
-        let res = await fetch(`https://El3alamy-system-default-rtdb.europe-west1.firebasedatabase.app/${getSafeUid()}/data/onlineExams.json`);
+        let res = await fetch(`https://el-senior-system-default-rtdb.europe-west1.firebasedatabase.app/${getSafeUid()}/data/onlineExams.json`);
         let exams = await res.json() || [];
         window.fetchedOnlineExams = Array.isArray(exams) ? exams : Object.values(exams).filter(e => e !== null);
         
@@ -4644,7 +4644,7 @@ window.openOnlineExamDetails = async function(id) {
     tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;">جاري تحليل البيانات ومقارنة الطلاب... ⏳</td></tr>`;
 
     try {
-        let res = await fetch(`https://El3alamy-system-default-rtdb.europe-west1.firebasedatabase.app/${window.getSafeUid()}/onlineSubmissions/${id}.json`);
+        let res = await fetch(`https://el-senior-system-default-rtdb.europe-west1.firebasedatabase.app/${window.getSafeUid()}/onlineSubmissions/${id}.json`);
         let subs = await res.json() || {};
         exam.submissions = subs; 
         
@@ -4884,7 +4884,7 @@ window.saveManualGrades = async function() {
 
         sub.isGraded = true; 
 
-        await fetch(`https://El3alamy-system-default-rtdb.europe-west1.firebasedatabase.app/${window.getSafeUid()}/onlineSubmissions/${examId}/${subKey}.json`, {
+        await fetch(`https://el-senior-system-default-rtdb.europe-west1.firebasedatabase.app/${window.getSafeUid()}/onlineSubmissions/${examId}/${subKey}.json`, {
             method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(sub)
         });
 
@@ -4914,7 +4914,7 @@ window.saveManualGrades = async function() {
 window.toggleExamStatus = async function(index, currentStatus) {
     let newStatus = currentStatus === 'open' ? 'closed' : 'open';
     try {
-        await fetch(`https://El3alamy-system-default-rtdb.europe-west1.firebasedatabase.app/${getSafeUid()}/data/onlineExams/${index}/status.json`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(newStatus) });
+        await fetch(`https://el-senior-system-default-rtdb.europe-west1.firebasedatabase.app/${getSafeUid()}/data/onlineExams/${index}/status.json`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(newStatus) });
         renderOnlineExams();
     } catch(e) {}
 };
@@ -4923,7 +4923,7 @@ window.deleteOnlineExam = async function(index) {
     if(!confirm("⚠️ تأكيد الحذف النهائي؟")) return;
     try {
         let exams = [...window.fetchedOnlineExams]; exams.splice(index, 1);
-        await fetch(`https://El3alamy-system-default-rtdb.europe-west1.firebasedatabase.app/${getSafeUid()}/data/onlineExams.json`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(exams) });
+        await fetch(`https://el-senior-system-default-rtdb.europe-west1.firebasedatabase.app/${getSafeUid()}/data/onlineExams.json`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(exams) });
         renderOnlineExams();
     } catch(e) {}
 };
@@ -4941,7 +4941,7 @@ window.sendPlatformNotification = async function(target, title, message) {
         date: new Date().toLocaleDateString('ar-EG')
     };
     try {
-        await fetch(`https://El3alamy-system-default-rtdb.europe-west1.firebasedatabase.app/${getSafeUid()}/notifications/${notif.id}.json`, {
+        await fetch(`https://el-senior-system-default-rtdb.europe-west1.firebasedatabase.app/${getSafeUid()}/notifications/${notif.id}.json`, {
             method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(notif)
         });
     } catch(e) { console.error("Notification Error", e); }
@@ -4968,7 +4968,7 @@ window.loadPlatformForumQuestions = async function() {
     if(!tbody) return;
     tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">جاري جلب الأسئلة... ⏳</td></tr>`;
     try {
-        let res = await fetch(`https://El3alamy-system-default-rtdb.europe-west1.firebasedatabase.app/${getSafeUid()}/forum.json`);
+        let res = await fetch(`https://el-senior-system-default-rtdb.europe-west1.firebasedatabase.app/${getSafeUid()}/forum.json`);
         let data = await res.json() || {};
         tbody.innerHTML = "";
         let keys = Object.keys(data).reverse();
@@ -4987,7 +4987,7 @@ window.answerForumQuestion = async function(id) {
     let reply = prompt("اكتب الرد النموذجي للسؤال:");
     if(!reply) return;
     try {
-        await fetch(`https://El3alamy-system-default-rtdb.europe-west1.firebasedatabase.app/${getSafeUid()}/forum/${id}.json`, {
+        await fetch(`https://el-senior-system-default-rtdb.europe-west1.firebasedatabase.app/${getSafeUid()}/forum/${id}.json`, {
             method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ replyText: reply })
         });
         showToast("تم إرسال الرد وتحديث المنصة لجميع زملائه! ✅");
@@ -5008,7 +5008,7 @@ window.loadStoreData = async function() {
     if(grid) grid.innerHTML = `<div style="grid-column: 1/-1; text-align:center;">جاري تحميل المتجر... ⏳</div>`;
     
     try {
-        let res = await fetch(`https://El3alamy-system-default-rtdb.europe-west1.firebasedatabase.app/${getSafeUid()}/store.json`);
+        let res = await fetch(`https://el-senior-system-default-rtdb.europe-west1.firebasedatabase.app/${getSafeUid()}/store.json`);
         let data = await res.json() || { items: {}, logs: {} };
         
         window.currentStoreItems = data.items ? Object.values(data.items) : [];
@@ -5084,7 +5084,7 @@ window.saveStoreItem = async function() {
         };
 
         // حفظ العنصر
-        await fetch(`https://El3alamy-system-default-rtdb.europe-west1.firebasedatabase.app/${getSafeUid()}/store/items/${id}.json`, {
+        await fetch(`https://el-senior-system-default-rtdb.europe-west1.firebasedatabase.app/${getSafeUid()}/store/items/${id}.json`, {
             method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(itemData)
         });
 
@@ -5134,7 +5134,7 @@ window.resetStoreForm = function() {
 window.deleteStoreItem = async function(id, name) {
     if(!confirm(`هل أنت متأكد من حذف (${name}) من المتجر نهائياً؟`)) return;
     try {
-        await fetch(`https://El3alamy-system-default-rtdb.europe-west1.firebasedatabase.app/${getSafeUid()}/store/items/${id}.json`, { method: 'DELETE' });
+        await fetch(`https://el-senior-system-default-rtdb.europe-west1.firebasedatabase.app/${getSafeUid()}/store/items/${id}.json`, { method: 'DELETE' });
         showToast("تم الحذف بنجاح! 🗑️");
         loadStoreData();
     } catch(e) { showToast("حدث خطأ أثناء الحذف", "error"); }
@@ -5683,7 +5683,7 @@ window.notifyParentApp = async function(studentCode, title, message) {
         
         // حفظ نسخة في الداتا بيز عشان "سجل الإشعارات" يفضل شغال في تطبيق ولي الأمر
         let notifId = "notif_" + Date.now();
-        await fetch(`https://El3alamy-system-default-rtdb.europe-west1.firebasedatabase.app/${getSafeUid()}/notifications/${notifId}.json`, {
+        await fetch(`https://el-senior-system-default-rtdb.europe-west1.firebasedatabase.app/${getSafeUid()}/notifications/${notifId}.json`, {
             method: 'PUT', 
             headers: { 'Content-Type': 'application/json' }, 
             body: JSON.stringify({
@@ -5811,7 +5811,7 @@ window.loadJoinRequests = async function() {
     let tbody = document.getElementById("join-requests-tbody");
     if(!tbody) return;
     try {
-        let res = await fetch(`https://El3alamy-system-default-rtdb.europe-west1.firebasedatabase.app/${localStorage.getItem("licenseKey")}/join_requests.json`);
+        let res = await fetch(`https://el-senior-system-default-rtdb.europe-west1.firebasedatabase.app/${localStorage.getItem("licenseKey")}/join_requests.json`);
         let data = await res.json() || {};
         window.currentJoinRequests = data;
         
@@ -5905,7 +5905,7 @@ window.confirmApproveRequest = async function() {
         localStorage.setItem("students", JSON.stringify(students));
         
         // مسح الطلب من الفايربيز
-        await fetch(`https://El3alamy-system-default-rtdb.europe-west1.firebasedatabase.app/${localStorage.getItem("licenseKey")}/join_requests/${id}.json`, { method: 'DELETE' });
+        await fetch(`https://el-senior-system-default-rtdb.europe-west1.firebasedatabase.app/${localStorage.getItem("licenseKey")}/join_requests/${id}.json`, { method: 'DELETE' });
 
         // إرسال رسالة واتساب للطالب (ولو مش كاتب رقمه هيبعت لولي الأمر احتياطي)
         let portalLink = `https://ma9248290-collab.github.io/El3alamy-system/parent.html`;
@@ -5936,7 +5936,7 @@ window.confirmApproveRequest = async function() {
 window.rejectRequest = async function(id) {
     if(!confirm("هل أنت متأكد من رفض هذا الطلب وحذفه؟")) return;
     try {
-        await fetch(`https://El3alamy-system-default-rtdb.europe-west1.firebasedatabase.app/${localStorage.getItem("licenseKey")}/join_requests/${id}.json`, { method: 'DELETE' });
+        await fetch(`https://el-senior-system-default-rtdb.europe-west1.firebasedatabase.app/${localStorage.getItem("licenseKey")}/join_requests/${id}.json`, { method: 'DELETE' });
         showToast("تم حذف الطلب 🗑️");
         loadJoinRequests();
     } catch(e) { showToast("خطأ في الاتصال!", "error"); }
