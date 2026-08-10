@@ -231,6 +231,9 @@ function isValidEgyptianPhone(phone) {
     return regex.test(p);
 }
 
+
+
+const ADMIN_USER = "admin", ADMIN_PASS = "12345"; 
 // ==========================================
 // 3. التحقق من الدخول عند تحميل الصفحة
 // ==========================================
@@ -367,7 +370,7 @@ if(loginForm) {
         e.preventDefault();
         
         // 🔒 تثبيت كود السنتر في الخلفية لنسخة El3alamy
-        let code = "El3alamy_System_Master"; 
+       let code = "El3alamy_System_Master";
         
         let user = document.getElementById("loginUsername").value.trim();
         let pass = document.getElementById("loginPassword").value.trim();
