@@ -370,7 +370,7 @@ if(loginForm) {
         e.preventDefault();
         
         // 🔒 تثبيت كود السنتر في الخلفية لنسخة El3alamy
-       let code = "El3alamy_System_Master";
+       let code = "Mr_mostafa_mahmoud";
         
         let user = document.getElementById("loginUsername").value.trim();
         let pass = document.getElementById("loginPassword").value.trim();
