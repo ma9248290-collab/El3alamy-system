@@ -12,7 +12,8 @@ let schedule = JSON.parse(localStorage.getItem("schedule")) || [];
 let isAssistantMode = localStorage.getItem("isAssistantMode") === "true";
 let adminPin = localStorage.getItem("adminPin") || "1234";
 let books = JSON.parse(localStorage.getItem("books")) || [];
-
+let onlineExams = JSON.parse(localStorage.getItem("onlineExams")) || [];
+let monthlyPayments = JSON.parse(localStorage.getItem("monthlyPayments")) || {};
 
 // تحديث المجموعات
 let groups = JSON.parse(localStorage.getItem("groups")) || [];
@@ -342,11 +343,11 @@ function toggleTheme() {
 // 12. نظام التفعيل وفصل البيانات (Multi-Tenancy) والمزامنة
 // ==========================================
 let isFirebaseLoaded = false;
-let licenseKey = localStorage.getItem("licenseKey"); // بنقرأ الكود من جهاز المدرس
+let licenseKey = "Mr_mostafa_mahmoud"; // 🔒 تثبيت إجباري عشان ميسحبش من الذاكرة المشتركة
 
 // الدالة دي بتولد مسار الداتابيز المخصوص للمدرس بناءً على كوده!
 function getFirebaseUrl() {
-    return `https://el-senior-system-default-rtdb.europe-west1.firebasedatabase.app/${licenseKey}/data.json`;
+    return `https://el-senior-system-default-rtdb.europe-west1.firebasedatabase.app/Mr_mostafa_mahmoud/data.json`;
 }
 
 // ==========================================
@@ -670,9 +671,8 @@ async function loadDataFromFirebase() {
         isFirebaseLoaded = true; return; 
     }
     
-    // 🔥 تعريف كود السنتر اللي كان بيعمل إيرور في الخفاء
-    let currentLicenseKey = localStorage.getItem("licenseKey"); 
-    if(!currentLicenseKey) return; 
+    // 🔥 تعريف كود السنتر (تثبيت إجباري لضمان العزل)
+let currentLicenseKey = "Mr_mostafa_mahmoud";
     
     try {
         let licRes = await fetch(`https://edutrack-system-1ded4-default-rtdb.firebaseio.com/licenses/${currentLicenseKey}.json`);
@@ -3555,9 +3555,7 @@ let currentGradingStudentPhone = null;
 let currentQuestions = [];
 
 window.getSafeUid = function() {
-    let uid = localStorage.getItem("licenseKey");
-    if (!uid) console.error("لم يتم العثور على ID المدرس (licenseKey)!");
-    return uid;
+    return "Mr_mostafa_mahmoud"; // 🔒 التثبيت النهائي لمسار الداتا في كل الـ Fetches
 };
 
 // 1. تعديل دالة switchPlatformTab (عشان تعبي قائمة الصفوف بدل المجموعات)

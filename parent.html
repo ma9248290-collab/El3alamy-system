@@ -1035,8 +1035,8 @@ body {
         }
 
         window.onload = function() {
-            const savedCode = localStorage.getItem("edu_student_code");
-            const savedPhone = localStorage.getItem("edu_parent_phone");
+            const savedCode = localStorage.getItem("almy_student_code");
+const savedPhone = localStorage.getItem("almy_parent_phone");
             
             loadTeacherInfoInitial(); 
 
@@ -1144,9 +1144,9 @@ currentStudent.level = (studentGroupObj && studentGroupObj.level) ? studentGroup
                 // ==========================================
                 applyDynamicTheme(currentStudent.level);
 
-                localStorage.setItem("edu_student_code", code);
-                localStorage.setItem("edu_parent_phone", phone);
-                localStorage.setItem("edu_teacher_id", globalTeacherId);
+                localStorage.setItem("almy_student_code", code);
+localStorage.setItem("almy_parent_phone", phone);
+localStorage.setItem("almy_teacher_id", globalTeacherId);
 
                 allOnlineExams = data.onlineExams || [];
                 window.studentCode = code;
@@ -1241,11 +1241,11 @@ currentStudent.level = (studentGroupObj && studentGroupObj.level) ? studentGroup
         // 🌟 باقي الدوال
         // ==========================================
         function logoutStudent() {
-            localStorage.removeItem("edu_student_code");
-            localStorage.removeItem("edu_parent_phone");
-            localStorage.removeItem("edu_teacher_id");
-            location.reload(); 
-        }
+    localStorage.removeItem("almy_student_code");
+    localStorage.removeItem("almy_parent_phone");
+    localStorage.removeItem("almy_teacher_id");
+    location.reload(); 
+}
 
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
