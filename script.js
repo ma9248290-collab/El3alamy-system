@@ -984,8 +984,8 @@ function filterGroupsByLevel(levelSelectId, groupSelectId) {
 
 function generateStudentCode() { let maxId = 0; students.forEach(s => { let num = parseInt(s.code, 10); if (!isNaN(num) && num > maxId) maxId = num; }); return (maxId + 1).toString(); }
 
-document.getElementById("addStudentForm")?.addEventListener("submit", async function(e) { 
-    e.preventDefault(); 
+// دالة مساعدة لحفظ الطالب تعمل مع الزرارين (حفظ وإنهاء / حفظ وإضافة)
+window.processStudentSaving = async function(keepOpen) {
     const code = document.getElementById("studentCode").value.trim(); 
     const name = document.getElementById("studentName").value.trim(); 
     const level = document.getElementById("studentLevel").value; 
@@ -1022,9 +1022,7 @@ document.getElementById("addStudentForm")?.addEventListener("submit", async func
     
     if(typeof addSystemLog === "function") addSystemLog("إضافة طالب 🎓", `تسجيل الطالب: ${name} (كود: ${code}) في ${group}`);
 
-    // =========================================================
-    // 🌟 إرسال رسالة واتساب شيك واحترافية للطالب وولي الأمر
-    // =========================================================
+    // إرسال رسالة الترحيب على الواتساب
     const portalLink = `https://ma9248290-collab.github.io/El3alamy-system/parent.html`;
     const teacherName = localStorage.getItem("teacherName") || "Sami Samir";
     const centerName = localStorage.getItem("centerName") || "El3alamy";
@@ -1043,17 +1041,54 @@ document.getElementById("addStudentForm")?.addEventListener("submit", async func
                        `مع تمنياتنا لك بالتفوق والدرجة النهائية! 🎯💪`;
 
     if (typeof sendAutoWhatsApp === "function") {
-        // إرسال للطالب (إذا كان مختلفاً عن ولي الأمر)
         if (phone !== "0" ) {
             setTimeout(() => sendAutoWhatsApp(phone, welcomeMsg), 2500);
         }
     }
 
-    this.reset(); 
-    closeModal('addStudentModal'); 
     renderTable(); 
-    showToast("تم تسجيل الطالب وإرسال رسالة الترحيب بنجاح ✅"); 
+    if (document.getElementById("dashboard-view")?.style.display === "block") {
+        document.getElementById("total-students").innerText = students.length;
+    }
+    if (typeof syncDataToBot === "function") syncDataToBot();
+
+    // السحر هنا: لو ضغط على حفظ وإضافة جديد
+    if (keepOpen) {
+        showToast("تم الحفظ! جاهز لإضافة الطالب التالي ➕");
+        // مسح الاسم والأرقام فقط
+        document.getElementById("studentName").value = "";
+        document.getElementById("studentPhone").value = "";
+        document.getElementById("parentPhone").value = "";
+        
+        // توليد كود جديد للطالب التالي أوتوماتيك
+        document.getElementById("studentCode").value = generateStudentCode();
+        
+        // عمل فوكس على خانة الاسم عشان يكتب على طول
+        document.getElementById("studentName").focus();
+    } else {
+        // لو ضغط حفظ وإنهاء
+        showToast("تم تسجيل الطالب بنجاح ✅"); 
+        document.getElementById("addStudentForm").reset(); 
+        closeModal('addStudentModal'); 
+    }
+};
+
+// ربط الدالة بزر (حفظ وإنهاء) اللي بيشتغل مع الـ Submit
+document.getElementById("addStudentForm")?.addEventListener("submit", async function(e) { 
+    e.preventDefault(); 
+    await processStudentSaving(false);
 });
+
+// دالة زر (حفظ وإضافة آخر)
+window.saveAndAddAnotherStudent = async function() {
+    const form = document.getElementById("addStudentForm");
+    // التحقق من صحة الخانات الإجبارية الأول
+    if (form.checkValidity()) {
+        await processStudentSaving(true);
+    } else {
+        form.reportValidity(); // لإظهار رسالة التنبيه الحمراء لو ساب خانة فاضية
+    }
+};
 
 function renderTable() { 
     const tbody = document.getElementById("students-list"); 
@@ -2166,12 +2201,36 @@ window.randomSleep = function(min = 2000, max = 5000) {
 
 
 // ==========================================
-// 🧠 معالج قوالب الرسائل الذكي (المطور)
+// 🧠 معالج قوالب الرسائل الذكي (المطور بالترحيب العشوائي)
 // ==========================================
 window.processMessageTemplate = function(template, student, session, reportData) {
     let tName = localStorage.getItem("teacherName") || "المدير";
     let cName = localStorage.getItem("centerName") || "السنتر";
     let nowTime = new Date().toLocaleTimeString('ar-EG');
+    
+    // 🎲 1. قاموس الترحيبات العشوائية
+    const parentGreetings = [
+        "أهلاً بحضرتك",
+        "مرحباً بك",
+        "السلام عليكم ورحمة الله،",
+        "تحياتنا لحضرتك",
+        "أهلاً وسهلاً بك",
+        "طاب يومك"
+    ];
+
+    const studentGreetings = [
+        "أهلاً بيك يا بطل",
+        "عاش يا وحش",
+        "أخبار المذاكرة إيه يا",
+        "شد حيلك يا نجم",
+        "يا هلا بالبطل",
+        "مستعد للقمة يا",
+        "إيه الأخبار يا"
+    ];
+
+    // اختيار ترحيب عشوائي لكل رسالة
+    let randomParentGreeting = parentGreetings[Math.floor(Math.random() * parentGreetings.length)];
+    let randomStudentGreeting = studentGreetings[Math.floor(Math.random() * studentGreetings.length)];
     
     let finalTemplate = template;
     
@@ -2180,26 +2239,85 @@ window.processMessageTemplate = function(template, student, session, reportData)
         finalTemplate += "\n\n{تفاصيل_التقرير}";
     }
 
-    // 1. استبدال المتغيرات الثابتة
+    // 2. استبدال المتغيرات الثابتة ومتغيرات الترحيب العشوائي
     let msg = finalTemplate
-        .replace(/{اسم_الطالب}/g, student.name)
-        .replace(/{المجموعة}/g, student.group)
+        .replace(/{ترحيب_ولي_الأمر}/g, randomParentGreeting) // يعطي ترحيب عشوائي لولي الأمر
+        .replace(/{ترحيب_الطالب}/g, randomStudentGreeting)    // يعطي ترحيب عشوائي للطالب
+        .replace(/{اسم_الطالب}/g, student.name || "")
+        .replace(/{كود_الطالب}/g, student.code || "")
+        .replace(/{رقم_الطالب}/g, (student.phone && student.phone !== "0") ? student.phone : "غير مسجل")
+        .replace(/{رقم_ولي_الأمر}/g, (student.parentPhone && student.parentPhone !== "0") ? student.parentPhone : "غير مسجل")
+        .replace(/{المجموعة}/g, student.group || "")
         .replace(/{الموضوع}/g, session.topic || 'حصة عادية')
         .replace(/{تفاصيل_التقرير}/g, reportData)
         .replace(/{اسم_السنتر}/g, cName)
         .replace(/{اسم_المدير}/g, tName)
         .replace(/{وقت_الرسالة}/g, nowTime);
 
-    // 2. معالجة الـ Spintax وحذف الأقواس لو المدرس نسي يكتب فاصل |
+    // 3. معالجة الـ Spintax اليدوي لو المدرس استخدمه {كلمة1|كلمة2}
     msg = msg.replace(/\{([^{}]*)\}/g, function(match, contents) {
         if (contents.includes('|')) {
             let options = contents.split('|');
             return options[Math.floor(Math.random() * options.length)];
         }
-        return contents; // 🌟 هنا التعديل: بيرجع الكلمة نظيفة من غير الأقواس
+        return contents; 
     });
     
     return msg;
+};
+
+// ==========================================
+// 🖱️ نظام إدراج المتغيرات التفاعلي في مكان المؤشر (Cursor Tracking)
+// ==========================================
+let lastFocusedMsgBox = null;
+
+// تتبع المربع الذي يقف فيه المستخدم حالياً
+document.addEventListener('DOMContentLoaded', () => {
+    const parentBox = document.getElementById('settingParentMsg');
+    const studentBox = document.getElementById('settingStudentMsg');
+    
+    if(parentBox) {
+        parentBox.addEventListener('focus', () => lastFocusedMsgBox = parentBox);
+        parentBox.addEventListener('blur', () => { /* لا نفرغ المتغير لنحتفظ بآخر مربع */ });
+    }
+    if(studentBox) {
+        studentBox.addEventListener('focus', () => lastFocusedMsgBox = studentBox);
+        studentBox.addEventListener('blur', () => { /* لا نفرغ المتغير لنحتفظ بآخر مربع */ });
+    }
+});
+
+// دالة زرع المتغير في النص
+window.insertVariable = function(variableText) {
+    let targetBox = lastFocusedMsgBox;
+    
+    // لو المدرس مضغطش على أي مربع، نختار مربع ولي الأمر كافتراضي
+    if (!targetBox) {
+        targetBox = document.getElementById('settingParentMsg');
+        if(!targetBox) return;
+        showToast("💡 تم الإدراج في رسالة ولي الأمر (اضغط على مربع الطالب إذا أردت الإدراج هناك).", "info");
+    }
+
+    // تحديد مكان المؤشر الحالي
+    const startPos = targetBox.selectionStart;
+    const endPos = targetBox.selectionEnd;
+    const text = targetBox.value;
+
+    // دمج المتغير في النص
+    targetBox.value = text.substring(0, startPos) + variableText + text.substring(endPos);
+    
+    // إعادة المؤشر بعد المتغير مباشرة عشان يقدر يكمل كتابة
+    const newCursorPos = startPos + variableText.length;
+    targetBox.setSelectionRange(newCursorPos, newCursorPos);
+    targetBox.focus();
+
+    // تشغيل أنيميشن خفيف للمربع عشان يلفت انتباهه إن الإضافة تمت
+    targetBox.style.transition = "all 0.2s";
+    targetBox.style.backgroundColor = "#f0fdf4"; // أخضر فاتح
+    targetBox.style.borderColor = "#10b981";
+    setTimeout(() => {
+        targetBox.style.backgroundColor = "";
+        targetBox.style.borderColor = "";
+    }, 300);
 };
 
 // دالة مساعدة للتأخير الزمني العشوائي (لحماية الرقم من الحظر)
