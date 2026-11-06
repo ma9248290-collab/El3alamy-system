@@ -74,11 +74,11 @@
                 let settings = await res.json();
                 
                 if (settings) {
-                    let tName = settings.teacherName || "أسامة رفعت";
+                    let tName = settings.teacherName || "مصطفى محمود";
                     let cName = settings.centerName || "El-Senior";
 
                     // أسماء المستر في الصفحة الرئيسية والمودال والمنصة
-                   if(document.getElementById("nav-brand-name")) document.getElementById("nav-brand-name").innerText ="هيستوريا: أسامة رفعت"; // مؤقت لحد ما الطالب يسجل
+                   if(document.getElementById("nav-brand-name")) document.getElementById("nav-brand-name").innerText ="العالمي: مصطفى محمود"; // مؤقت لحد ما الطالب يسجل
                     if(document.getElementById("hero-teacher-name")) document.getElementById("hero-teacher-name").innerText = `مستر ${tName}`;
                     if(document.getElementById("modal-teacher-name")) document.getElementById("modal-teacher-name").innerText = `مستر ${tName}`;
                     if(document.getElementById("top-name")) document.getElementById("top-name").innerText = `مرحباً بك!`; // مؤقت لحد ما الطالب يسجل
@@ -2288,7 +2288,7 @@ window.loadStudentTopupRequests = async function() {
 
 
 // =========================================================
-// 💳 1. أنيميشن الكتابة الحية على بطاقة بنك هيستوريا (16 رقماً)
+// 💳 1. أنيميشن الكتابة الحية على بطاقة بنك العالمي (16 رقماً)
 // =========================================================
 window.formatAndAnimateBankCard = function(input) {
     // قبول الأرقام فقط بحد أقصى 16 رقماً

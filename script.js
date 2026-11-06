@@ -1,7 +1,7 @@
 // ==========================================
 // 1. قواعد البيانات والتهيئة الأساسية
 // ==========================================
-const TEACHER_NAME = "هيستوريا";
+const TEACHER_NAME = "العالمي";
 let students = JSON.parse(localStorage.getItem("students")) || [];
 let classSessions = JSON.parse(localStorage.getItem("classSessions")) || []; 
 let exams = JSON.parse(localStorage.getItem("exams")) || []; 
@@ -277,7 +277,7 @@ function openModal(modalId) {
         const tInput = document.getElementById('teacherNameInput');
         const cInput = document.getElementById('centerNameInput');
         if(tInput) tInput.value = localStorage.getItem('teacherName') || TEACHER_NAME;
-        if(cInput) cInput.value = localStorage.getItem('centerName') || "هيستوريا";
+        if(cInput) cInput.value = localStorage.getItem('centerName') || "العالمي";
     }
 }
 function closeModal(modalId) { document.getElementById(modalId).style.display = "none"; if(modalId === 'scannerModal') stopCameraScanner(); }
@@ -1286,7 +1286,7 @@ window.processStudentSaving = async function(keepOpen) {
     // إرسال الواتساب
     const portalLink = `https://ma9248290-collab.github.io/historya-systtem/parent.html`;
     const teacherName = localStorage.getItem("teacherName") || "Sami Samir";
-    const centerName = localStorage.getItem("centerName") || "هيستوريا";
+    const centerName = localStorage.getItem("centerName") || "العالمي";
 
     const welcomeMsg = `🌟 *مرحبًا بك في كتيبة الأوائل مع ${centerName}* 🌟\n*مستر / ${teacherName}*\n\nأهلاً بك يا بطل/ة: *${name}* 👑\nتم تسجيل بياناتك بنجاح في المنصة التعليمية 🎉\n\n📌 *بيانات حسابك في النظام:*\n▫️ *كود الطالب:* \`${code}\`\n▫️ *الصف الدراسي:* ${level}\n▫️ *المجموعة:* ${group}\n\n🔗 *رابط الدخول للمنصة التعليمية:*\n${portalLink}\n\n💡 *تنبيه:* استخدم كود الطالب ورقم هاتف ولي الأمر لتسجيل الدخول لمتابعة المحاضرات والامتحانات ونتائجك أولاً بأول.\n\nمع تمنياتنا لك بالتفوق والدرجة النهائية! 🎯💪`;
 
@@ -2668,7 +2668,7 @@ window.exportData = async function() {
         activeLevels: window.activeLevels || JSON.parse(localStorage.getItem("activeLevels")) || ["الصف الأول الثانوي", "الصف الثاني الثانوي", "الصف الثالث الثانوي"],
         settings: {
             teacherName: localStorage.getItem("teacherName") || "أسامة رفعت",
-            centerName: localStorage.getItem("centerName") || "هيستوريا",
+            centerName: localStorage.getItem("centerName") || "العالمي",
             adminUser: localStorage.getItem("adminUser") || "admin",
             adminPass: localStorage.getItem("adminPass") || "12345",
             adminPin: localStorage.getItem("adminPin") || "1234",
@@ -4418,8 +4418,8 @@ window.switchPage = function(pageId) {
         
         // 2. املأ بيانات المدرس في الخانات أول ما يفتح التاب
         if(document.getElementById('settingTeacherName')) {
-            document.getElementById('settingTeacherName').value = localStorage.getItem('teacherName') || 'هيستوريا';
-            document.getElementById('settingCenterName').value = localStorage.getItem('centerName') || 'هيستوريا';
+            document.getElementById('settingTeacherName').value = localStorage.getItem('teacherName') || 'العالمي';
+            document.getElementById('settingCenterName').value = localStorage.getItem('centerName') || 'العالمي';
             document.getElementById('settingAdminUser').value = localStorage.getItem('adminUser') || '';
             document.getElementById('settingAdminPass').value = localStorage.getItem('adminPass') || '';
             document.getElementById('settingAdminPin').value = localStorage.getItem('adminPin') || '';
@@ -4718,7 +4718,7 @@ window.exportAllCodesToExcel = async function() {
 };
 
 // =========================================================
-// 💳 توليد أكواد شحن رقمية من 16 رقماً (بنك هيستوريا VIP)
+// 💳 توليد أكواد شحن رقمية من 16 رقماً (بنك العالمي VIP)
 // =========================================================
 
 // دالة مساعدة لتوليد 16 رقماً عشوائياً فريداً (لا يبدأ بصفر)
@@ -5121,7 +5121,7 @@ window.switchPlatformTab = function(tabName) {
     
     if(targetSec) targetSec.style.display = 'block';
     
-    // تمييز الزر النشط بالأحمر الملكي الخاص بهوية هيستوريا
+    // تمييز الزر النشط بالأحمر الملكي الخاص بهوية العالمي
     if(targetBtn) {
         targetBtn.style.background = 'linear-gradient(135deg, #b91c1c, #980000)';
         targetBtn.style.color = '#ffffff';
@@ -10068,7 +10068,7 @@ window.processAiLogic = function(text) {
         // --- 🐙 الدليل الشامل لوظائف أوكتو ---
         if (query.includes("قدراتك") || query.includes("بتعمل") || query.includes("روبوت") || query.includes("مين") || query.includes("بتساعدني") || query.includes("بتساعدنى") || query.includes("وظيفتك") || query.includes("السيستم") || query.includes("النظام") || query.includes("كل حاجه") || query === "اشرح") {
             return {
-                response: `<b>أنا أوكتو AI 🐙، المساعد الذكي الخاص بيك المدمج في نظام هيستوريا. أنا هنا عشان أوفر عليك وقت ومجهود، وأنفذ أوامرك وأنت في مكانك من غير ما تلف في الشاشات!</b><br><br>
+                response: `<b>أنا أوكتو AI 🐙، المساعد الذكي الخاص بيك المدمج في نظام العالمي. أنا هنا عشان أوفر عليك وقت ومجهود، وأنفذ أوامرك وأنت في مكانك من غير ما تلف في الشاشات!</b><br><br>
                 أقدر أعملك الحاجات دي بكلمة واحدة:<br><br>
                 <b>1. إدارة الحصص والتقييمات 📚:</b><br>
                 أقدر أفتحلك حصص جديدة أو أكريت امتحانات وواجبات بذكاء.<br>
@@ -11066,7 +11066,7 @@ const STUDENT_QUEST_MILESTONES = [
     { target: 200,  level: 2, title: "⚡ التمدد السريع (200 بطل)", color: "linear-gradient(135deg, #3b82f6, #1d4ed8)" },
     { target: 500,  level: 3, title: "🔥 جيش النصف ألف", color: "linear-gradient(135deg, #f59e0b, #b45309)" },
     { target: 1000, level: 4, title: "👑 إمبراطورية الألف طالب", color: "linear-gradient(135deg, #8b5cf6, #5b21b6)" },
-    { target: 2000, level: 5, title: "💎 أسطورة الـ 2000 (هيستوريا VIP)", color: "linear-gradient(135deg, #ec4899, #be185d)" },
+    { target: 2000, level: 5, title: "💎 أسطورة الـ 2000 (العالمي VIP)", color: "linear-gradient(135deg, #ec4899, #be185d)" },
     { target: 5000, level: 6, title: "🌍 القمة التاريخية الكبرى", color: "linear-gradient(135deg, #ef4444, #b91c1c)" }
 ];
 
@@ -11466,7 +11466,7 @@ window.exportMasterAnalyticsTable = function() {
     const table = document.getElementById("master-groups-analytics-table");
     if (!table || typeof XLSX === "undefined") return;
     const wb = XLSX.utils.table_to_book(table, { sheet: "إحصائيات_المجموعات" });
-    XLSX.writeFile(wb, `إحصائيات_هيستوريا_الشاملة_${new Date().toISOString().split('T')[0]}.xlsx`);
+    XLSX.writeFile(wb, `إحصائيات_العالمي_الشاملة_${new Date().toISOString().split('T')[0]}.xlsx`);
     if (typeof showToast === "function") showToast("تم تحميل شيت الإحصائيات الشاملة بنجاح! 📥");
 };
 
@@ -11876,7 +11876,7 @@ window.processOctoAiBrain = async function(rawInput) {
             Object.values(financeRecords[k] || {}).forEach(p => { if (p && p.status === 'paid') totalInc += (parseFloat(p.amount) || 0); });
         });
         return `
-            📊 <strong>تقرير هيستوريا الشامل:</strong><br>
+            📊 <strong>تقرير العالمي الشامل:</strong><br>
             • الطلاب: <strong>${allSt.length}</strong> | المجموعات: <strong>${allGrps.length}</strong><br>
             • الحصص: <strong>${allSess.length}</strong> | الامتحانات: <strong>${allEx.length}</strong><br>
             • إجمالي خزنة الحصص: <strong style="color:#10b981;">${totalInc.toLocaleString()} ج.م</strong><br>
